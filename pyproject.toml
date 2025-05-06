@@ -1,5 +1,5 @@
 [project]
-name = "example"
+name = "agent"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -12,6 +12,9 @@ dependencies = [
     "rich",
     "typer",
 ]
+
+[project.scripts]
+agent = "agent.__main__:app"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
