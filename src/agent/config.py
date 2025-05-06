@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     """Configuration for the agent."""
 
     openai_api_key: SecretStr = Field(..., env="OPENAI_API_KEY")
-    model: str = "gpt-4o-mini"
+    model: str = "gpt-4.1-mini-2025-04-14"
     temperature: float = 0.7
 
     class Config:
