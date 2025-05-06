@@ -5,12 +5,18 @@ Allows mocking in tests (depends on reversal in chat.py)
 
 from collections.abc import Iterator
 import openai
+from openai.types.chat import ChatCompletion
+from typing import TypedDict, Literal
 from .config import settings
+
+class ChatMessage(TypedDict):
+    role: Literal["user", "assistant", "system"]
+    content: str
 
 _openai_client = openai.OpenAI(api_key=settings.openai_api_key.get_secret_value())
 
 
-def stream_chat(messages: list[dict]) -> Iterator[str]:
+def stream_chat(messages: list[ChatMessage]) -> Iterator[str]:
     """
     Send a prompt + context, return tokens as they are generated.
     """
@@ -26,7 +32,7 @@ def stream_chat(messages: list[dict]) -> Iterator[str]:
             yield delta.content
 
 
-def last_usage_cost(response) -> tuple[int, int, int]:
+def last_usage_cost(response: ChatCompletion) -> tuple[int, int, int]:
     """Return (prompt_tokens, completion_tokens, total_tokens)."""
     usage = response.usage  # available on the last chunk
     return usage.prompt_tokens, usage.completion_tokens, usage.total_tokens

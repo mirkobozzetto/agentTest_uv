@@ -11,8 +11,13 @@ def chat_stream(user_prompt: str) -> Iterator[str]:
     _history.add("user", user_prompt)
     messages = _history.context()
 
+    response_content = ""
     for token in stream_chat(messages):
+        response_content += token
         yield token                      # streaming direct
+
+    # Save the response in the history
+    _history.add("assistant", response_content)
 
     # OpenAI returns `usage` on the **last** chunk → not available here
     # ⇒ cost calculated by client or via a future hook
