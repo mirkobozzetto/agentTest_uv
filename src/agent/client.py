@@ -13,7 +13,10 @@ class ChatMessage(TypedDict):
     role: Literal["user", "assistant", "system"]
     content: str
 
-_openai_client = openai.OpenAI(api_key=settings.openai_api_key.get_secret_value())
+_openai_client = openai.OpenAI(
+    api_key=settings.openai_api_key.get_secret_value(),
+    timeout=settings.timeout
+)
 
 
 def stream_chat(messages: list[ChatMessage]) -> Iterator[str]:
@@ -24,6 +27,11 @@ def stream_chat(messages: list[ChatMessage]) -> Iterator[str]:
         model=settings.model,
         messages=messages,
         temperature=settings.temperature,
+        max_tokens=settings.max_tokens,
+        top_p=settings.top_p,
+        frequency_penalty=settings.frequency_penalty,
+        presence_penalty=settings.presence_penalty,
+        stop=settings.stop,
         stream=True,
     )
     for chunk in response:
